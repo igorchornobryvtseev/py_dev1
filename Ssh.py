@@ -1,4 +1,5 @@
 import time
+import sys
 
 import paramiko
 from colorama import Fore, Style
@@ -122,7 +123,8 @@ class Ssh:
                                 allow_agent=False)
 
         except:
-            print('unable to establish ssh connection')
+            print(f"unable to establish ssh connection to ip {server_ip}")
+            sys.exit(1)
 
         self.connection = self.client.invoke_shell()
 
@@ -193,8 +195,8 @@ class Ssh:
     def copy_running_startup(self):
         self.send_command("copy running-configuration startup-configuration")
 
-    def show_sw_not_active_version(self, eth_type, value, value_prefix):
-        print(f"Device details : {self.server_ip} -> set eth eth2 eth-type "
-              f"{eth_type} {value}{value_prefix}")
-        self.send_command(f"set eth eth2 eth-type {eth_type} {value}{value_prefix}")
-    #######################################################################################
+    def set_eth2(self, eth_type, value, value_prefix):
+        # print(f"Device details : {self.server_ip} -> set eth eth2 eth-type "
+        #       f"{eth_type} {value}{value_prefix}")
+        results = self.send_command(f"set eth eth2 eth-type {eth_type} {value}{value_prefix}")
+        print(f">>>>>{results}<<<<<")
